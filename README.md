@@ -66,7 +66,7 @@ The **Keyboard & mouse** tab lets you play with GTA V's default PC keys. Each ke
 
 1. Turn on **Keyboard & mouse** in its tab, and keep the bridge on.
 2. Switch to PS Remote Play and click inside the picture. That click starts capture and is not sent to the game.
-3. Play. **Shift+Esc** gives the keyboard and mouse back, as does switching to another window.
+3. Play. **F12** gives the keyboard and mouse back, as does switching to another window. (F12 isn't used by GTA V's PC keys, so pressing it never sends anything to the game.)
 
 While capturing, the mouse cursor stays still so it can't wander out of Remote Play or onto its toolbar, and keys GTA V uses are kept away from Remote Play's own window. The Windows key always works.
 

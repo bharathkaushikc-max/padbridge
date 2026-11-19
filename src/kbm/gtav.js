@@ -92,6 +92,7 @@ const GTAV = {
   },
   startLayer: 'foot',
   layerKey: 'Backquote', // swaps layers by hand if they get out of step with the game
+  // F12 is reserved: it releases capture (see capture.js), so presets must not bind it.
   mouse: 'right',        // mouse movement drives this stick
   notMapped: [
     'G (grenade): its PlayStation equivalent is not documented clearly enough to map.',

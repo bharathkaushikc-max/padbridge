@@ -40,7 +40,7 @@ test('C3 once locked: preset keys are swallowed and reported, other keys pass', 
   assert.equal(key(cap, VK.W, false), true);
   assert.deepEqual(events.slice(0, 2).map((e) => e.slice(0, 3)), [['key', 'W', true], ['key', 'W', false]]);
   assert.equal(key(cap, VK.K), false, 'K is not in the preset');
-  assert.equal(key(cap, VK.F12), false);
+  assert.equal(key(cap, VK.F11), false);
 });
 
 test('C4 the Windows keys are never swallowed', () => {
@@ -51,15 +51,20 @@ test('C4 the Windows keys are never swallowed', () => {
   assert.equal(key(cap, VK.RWin), false);
 });
 
-test('C5 Shift+Esc gives everything back and is not sent to the game', () => {
+test('C5 F12 gives everything back and sends nothing to the game', () => {
   const { cap, events } = make();
   click(cap);
-  key(cap, VK.LShift);
-  assert.equal(key(cap, VK.Escape), true);
+  assert.equal(key(cap, VK.F12), true);
   assert.equal(cap.locked, false);
   assert.ok(events.some((e) => e[0] === 'release'));
-  assert.ok(!events.some((e) => e[0] === 'key' && e[1] === 'Escape'), 'Esc did not become Pause');
+  assert.ok(!events.some((e) => e[0] === 'key'), 'no button press leaked on the way out');
+  assert.equal(key(cap, VK.F12, false), false, 'its key-up passes once released');
   assert.equal(key(cap, VK.W), false, 'keys pass again after release');
+});
+
+test('C5b the release key is not used by the GTA V preset', () => {
+  const { KbmMapper } = require('../src/kbm/mapper');
+  assert.equal(new KbmMapper(GTAV).handles('F12'), false);
 });
 
 test('C6 Esc on its own is the pause button', () => {

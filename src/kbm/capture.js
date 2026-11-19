@@ -8,7 +8,9 @@
 //     foreground window. Everywhere else your keyboard and mouse are untouched.
 //   - Input is only taken over after you click inside the Remote Play picture
 //     (not its bottom toolbar). That click itself is swallowed.
-//   - Shift+Esc, switching to another window, or disarming gives everything back.
+//   - F12 (unused by GTA V's PC keys), switching to another window, or disarming
+//     gives everything back. A combo such as Shift+Esc would leak Shift's own
+//     binding (sprint = Cross, which confirms in menus) before the Esc arrived.
 //   - Only keys the preset uses are swallowed; the Windows keys never are.
 //
 // Events: 'state' ({ armed, hooked, locked }), 'key' (name, down, t),
@@ -27,7 +29,8 @@ const WM = {
 };
 const LLKHF_INJECTED = 0x10;
 const LLMHF_INJECTED = 0x01;
-const TOOLBAR_PX = 130; // Remote Play's control bar along the bottom of its window
+const TOOLBAR_PX = 130;
+const RELEASE_VK = VK.F12; // gives the keyboard and mouse back // Remote Play's control bar along the bottom of its window
 
 let win32 = null;
 function loadWin32() {
@@ -177,9 +180,9 @@ class InputCapture extends EventEmitter {
     const down = wp === WM.KEYDOWN || wp === WM.SYSKEYDOWN;
     if (down) this.down.add(vk); else this.down.delete(vk);
     if (!this.locked) return false;
-    if (vk === VK.Escape && down && (this.down.has(VK.LShift) || this.down.has(VK.RShift))) {
-      this.release();
-      return true; // Shift+Esc only gives the mouse back; it never reaches the game
+    if (vk === RELEASE_VK) {
+      if (down) this.release();
+      return true; // the release key only gives the mouse back; it never reaches the game
     }
     const name = NAME_BY_VK[vk];
     if (!name || NEVER_BLOCK.has(vk) || !this.handles(name)) return false;
@@ -244,4 +247,4 @@ class InputCapture extends EventEmitter {
   }
 }
 
-module.exports = { InputCapture, WM };
+module.exports = { InputCapture, WM, RELEASE_KEY: 'F12' };

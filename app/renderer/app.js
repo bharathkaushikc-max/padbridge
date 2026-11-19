@@ -461,7 +461,7 @@ function renderKbmStatus() {
   if (enabled && !state.status.running) {
     cls = 'bad'; title = 'Waiting for the bridge'; text = 'Turn the bridge on (top right) so the PS5 receives the keys.';
   } else if (enabled && k.locked) {
-    cls = 'live'; title = 'Playing'; text = 'Your keyboard and mouse are going to the PS5. Shift+Esc gives the mouse back.';
+    cls = 'live'; title = 'Playing'; text = 'Your keyboard and mouse are going to the PS5. Press F12 to get them back.';
   } else if (enabled && k.hooked) {
     cls = 'wait'; title = 'Click to start'; text = 'Click inside the PS Remote Play picture to take over the keyboard and mouse.';
   } else if (enabled) {

@@ -4,7 +4,7 @@
 // Development flags:
 //   --no-bridge            open the window without creating the virtual controller
 //   --keep-server          leave the VIIPER server running when PadBridge quits
-//   --kbm-test             keyboard/mouse capture reacts to injected input and ignores which window is in front (tests only)
+//   --kbm-test             keyboard/mouse capture also reacts to injected (SendInput) events and logs its state (tests only)
 //   --user-data=<dir>      keep profiles and settings somewhere else (for tests)
 //   --tab=<name>           open on mapping | tuning | test | profiles
 //   --screenshot=<file>    save a PNG of the window once it has rendered, then quit
@@ -147,7 +147,12 @@ function applyKbm(profile) {
 function startKbm(profile) {
   kbm = new KbmMapper(GTAV, profile.kbm);
   const testing = has('kbm-test');
-  capture = new InputCapture({ handles: (key) => kbm.handles(key), acceptInjected: testing, ignoreForeground: testing });
+  capture = new InputCapture({ handles: (key) => kbm.handles(key), acceptInjected: testing });
+  if (testing) {
+    capture.on('state', (st) => console.log(`[kbm] ${JSON.stringify({ ...st, layer: kbm.layer })}`));
+    engine.on('log', (line) => console.log(`[engine] ${line}`));
+    process.stdin.on('data', (d) => { if (/quit/.test(String(d))) app.quit(); }); // tests close the app cleanly
+  }
   capture.on('key', (name, down, t) => {
     const before = kbm.layer;
     if (down) kbm.keyDown(name, t); else kbm.keyUp(name, t);
