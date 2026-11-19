@@ -57,7 +57,36 @@ The Xbox controller has fewer buttons than a DualSense, so View works as a modif
 - **Mapping:** a drawing of your controller with a callout on each control. Press a button to find it; pick what it sends from its callout.
 - **Tuning:** stick deadzone, trigger press point and View hold time, each beside a live view of your controller.
 - **Test:** your controller on one side, what Remote Play receives on the other, plus a vibration test.
+- **Keyboard & mouse:** play with GTA V's PC keys and the mouse (see below).
 - **Profiles:** create, rename, duplicate, delete, import and export. Changes apply immediately.
+
+## Keyboard and mouse (GTA V)
+
+The **Keyboard & mouse** tab lets you play with GTA V's default PC keys. Each key sends the PlayStation input that does the same thing in GTA V on PS5, and the mouse drives the right stick for the camera and aiming.
+
+1. Turn on **Keyboard & mouse** in its tab, and keep the bridge on.
+2. Switch to PS Remote Play and click inside the picture. That click starts capture and is not sent to the game.
+3. Play. **Shift+Esc** gives the keyboard and mouse back, as does switching to another window.
+
+While capturing, the mouse cursor stays still so it can't wander out of Remote Play or onto its toolbar, and keys GTA V uses are kept away from Remote Play's own window. The Windows key always works.
+
+GTA V uses different controls on foot and in a vehicle, so PadBridge keeps two layers. **F** (enter or exit a vehicle) switches between them; if PadBridge and the game disagree, for example after a failed car entry, press **`** to swap layers by hand or pick one in the tab.
+
+| Key | On foot | In a vehicle |
+|---|---|---|
+| W A S D | Move (left stick) | Accelerate (R2), brake (L2), steer |
+| Mouse | Camera and aim (right stick) | Camera (right stick) |
+| Left click / right click | Fire (R2) / aim (L2) | Drive-by fire (L1+R1) / aim (L1) |
+| Left Shift | Sprint (Cross, tapped repeatedly) | Lean forward |
+| Space | Jump (Square) | Handbrake (R1) |
+| F | Enter vehicle (Triangle) | Exit vehicle (Triangle) |
+| Q / R / E | Cover (R1) / reload (Circle) / context (D-pad right) | Radio wheel / cinematic camera / horn (L3) |
+| Tab, mouse wheel | Weapon wheel (L1), next and previous weapon | Next vehicle weapon, radio |
+| Left Ctrl / C | Stealth (L3) / look behind (R3) | Lean back / look behind (R3) |
+
+The tab lists every binding, including the phone, camera view, interaction menu, character wheel and special ability, and what isn't mapped. Mouse sensitivity, the smallest stick movement (to get past the game's own stick deadzone) and smoothing are adjustable there. If aiming feels inconsistent, turn off Windows' "Enhance pointer precision", which adds acceleration to the mouse movement PadBridge sees.
+
+The GTA V layout is assembled from community control charts; Rockstar publishes no official PC-to-PlayStation table. Ideas from [mouseplay](https://github.com/ko1N/mouseplay), [DualShock4-emulator](https://github.com/r57zone/DualShock4-emulator) and [JoyShockMapper](https://github.com/Electronicks/JoyShockMapper) shaped the mouse handling.
 
 ## Known limits
 
@@ -98,6 +127,7 @@ Xbox controller -> XInput -> mapping engine -> VIIPER (USB/IP) -> virtual DualSe
 | `src/mapping.js` | Pure mapping engine: Xbox state in, DualSense report out |
 | `src/engine.js` | The bridge loop, VIIPER connection, reconnects and rumble |
 | `src/profiles.js` | Profile files |
+| `src/kbm/` | Keyboard and mouse: GTA V preset, mapping, Windows capture |
 | `src/bridge.js` | Command-line bridge |
 | `app/` | Electron desktop app |
 | `e2e/run.js` | End-to-end button test |

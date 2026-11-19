@@ -16,9 +16,10 @@ contextBridge.exposeInMainWorld('padbridge', {
   deleteProfile: call('profile:delete'),
   exportProfile: call('profile:export'),
   importProfile: call('profile:import'),
-  // on('state' | 'status' | 'frame' | 'press', handler)
+  setKbmLayer: call('kbm:layer'),
+  // on('state' | 'status' | 'frame' | 'press' | 'kbm', handler)
   on: (channel, handler) => {
-    if (!['state', 'status', 'frame', 'press'].includes(channel)) return;
+    if (!['state', 'status', 'frame', 'press', 'kbm'].includes(channel)) return;
     ipcRenderer.on(channel, (_event, payload) => handler(payload));
   },
 });

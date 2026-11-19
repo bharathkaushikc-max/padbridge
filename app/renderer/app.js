@@ -376,6 +376,131 @@ function onPress(text) {
   if (currentTab === 'test') renderLog();
 }
 
+// ---- Keyboard & mouse ---------------------------------------------------------------
+const kbmKeycaps = { foot: {}, vehicle: {} };
+let kbmPlot = null;
+let kbmBuilt = false;
+
+function psText(row) {
+  if (row.stick) {
+    const dir = row.stick.y < 0 ? 'up' : row.stick.y > 0 ? 'down' : row.stick.x < 0 ? 'left' : 'right';
+    return `${row.stick.side === 'left' ? 'Left' : 'Right'} stick ${dir}`;
+  }
+  return row.press.map((p) => TARGET_NAME[p] || p).join(' + ');
+}
+function psNote(row) {
+  if (row.turbo) return 'tapped repeatedly';
+  if (row.tapMs) return 'tap';
+  if (row.minHoldMs) return 'held';
+  return '';
+}
+
+function buildKbm() {
+  kbmPlot = createPlot($('#kbm-plot'), { showRaw: false });
+  kbmPlot.setDeadzone(0);
+  const bind = (id, read, write, format) => {
+    const input = $(id);
+    const out = $(`${id}-out`);
+    input.addEventListener('input', () => {
+      write(Number(input.value));
+      out.textContent = format(Number(input.value));
+      saveProfile(250);
+    });
+    return () => { input.value = read(); out.textContent = format(Number(input.value)); };
+  };
+  syncKbmSliders = [
+    bind('#k-sens', () => profile.kbm.sensitivity, (v) => { profile.kbm.sensitivity = v; }, (v) => `${v.toFixed(1)}×`),
+    bind('#k-dz', () => Math.round(profile.kbm.antiDeadzone * 100), (v) => { profile.kbm.antiDeadzone = v / 100; }, (v) => `${v}%`),
+    bind('#k-smooth', () => profile.kbm.smoothingMs, (v) => { profile.kbm.smoothingMs = v; }, (v) => `${v} ms`),
+  ];
+  $('#kbm-switch').addEventListener('click', () => {
+    profile.kbm.enabled = !profile.kbm.enabled;
+    renderKbmStatus();
+    saveProfile();
+  });
+}
+let syncKbmSliders = [];
+
+function buildKbmBindings(preset) {
+  if (kbmBuilt) return;
+  kbmBuilt = true;
+  const host = $('#kbm-blocks');
+  for (const [id, layer] of Object.entries(preset.layers)) {
+    const block = el('div', { className: 'block' });
+    block.dataset.layer = id;
+    block.append(el('h2', { textContent: layer.name }));
+    for (const row of layer.rows) {
+      const cap = el('span', { className: 'keycap', textContent: row.keyLabel });
+      kbmKeycaps[id][row.key] = cap;
+      const act = el('span', { className: 'act', textContent: row.action });
+      if (row.switchTo) act.append(el('small', { textContent: `Switches to ${preset.layers[row.switchTo].name.toLowerCase()}` }));
+      if (row.whenHeld) act.append(el('small', { textContent: `With ${row.whenHeld.keyLabel} held: ${row.whenHeld.action.toLowerCase()}, ${row.whenHeld.press.map((p) => TARGET_NAME[p] || p).join(' + ')}` }));
+      const ps = el('span', { className: 'ps', textContent: psText(row) });
+      const note = psNote(row);
+      if (note) ps.append(el('small', { textContent: note }));
+      block.append(el('div', { className: 'krow' }, el('span', {}, cap), act, ps));
+    }
+    host.append(block);
+  }
+  const list = $('#kbm-missing');
+  const layerItem = el('li');
+  layerItem.append(el('code', { textContent: preset.layerKey }), ` switches between ${Object.values(preset.layers).map((l) => l.name.toLowerCase()).join(' and ')} by hand, if the game and PadBridge disagree about whether you are in a vehicle.`);
+  list.append(layerItem);
+  for (const line of preset.notMapped) list.append(el('li', { textContent: line }));
+}
+
+function renderKbmStatus() {
+  const k = state.kbm;
+  const enabled = !!profile.kbm.enabled;
+  const sw = $('#kbm-switch');
+  sw.setAttribute('aria-checked', String(enabled));
+  $('.switch-label', sw).textContent = enabled ? 'On' : 'Off';
+
+  const box = $('.kbm-state');
+  let cls = 'idle', title = 'Off', text = 'Turn it on to play with your keyboard and mouse.';
+  if (enabled && !state.status.running) {
+    cls = 'bad'; title = 'Waiting for the bridge'; text = 'Turn the bridge on (top right) so the PS5 receives the keys.';
+  } else if (enabled && k.locked) {
+    cls = 'live'; title = 'Playing'; text = 'Your keyboard and mouse are going to the PS5. Shift+Esc gives the mouse back.';
+  } else if (enabled && k.hooked) {
+    cls = 'wait'; title = 'Click to start'; text = 'Click inside the PS Remote Play picture to take over the keyboard and mouse.';
+  } else if (enabled) {
+    cls = 'wait'; title = 'Ready'; text = 'Switch to PS Remote Play, then click inside its picture to start. Nothing is captured until you do.';
+  }
+  box.className = `kbm-state ${cls}`;
+  $('#kbm-title').textContent = title;
+  $('#kbm-text').textContent = text;
+
+  const picker = $('#kbm-layers');
+  if (!picker.childElementCount) {
+    for (const [id, name] of Object.entries(k.layers)) {
+      const b = el('button', { textContent: name });
+      b.setAttribute('role', 'radio');
+      b.dataset.layer = id;
+      b.addEventListener('click', () => api.setKbmLayer(id));
+      picker.append(b);
+    }
+  }
+  for (const b of picker.children) b.setAttribute('aria-checked', String(b.dataset.layer === k.layer));
+  for (const block of document.querySelectorAll('#kbm-blocks .block')) {
+    const h = $('h2', block);
+    const on = block.dataset.layer === k.layer;
+    const tag = $('.tag', h);
+    if (on && !tag) h.append(el('span', { className: 'tag', textContent: 'In use' }));
+    if (!on && tag) tag.remove();
+  }
+}
+
+function frameKbm(frame) {
+  const extra = frame.extra;
+  kbmPlot.set(null, extra ? [extra.rx, extra.ry] : [0, 0]);
+  const held = new Set(frame.kbmHeld || []);
+  const layer = state.kbm.layer;
+  for (const [id, caps] of Object.entries(kbmKeycaps)) {
+    for (const [key, cap] of Object.entries(caps)) cap.classList.toggle('live', id === layer && held.has(key));
+  }
+}
+
 // ---- Profiles ---------------------------------------------------------------------
 let editing = null;   // { name, mode: 'rename' | 'delete' }
 
@@ -450,22 +575,28 @@ function applyState(next) {
   syncMapping();
   syncTuning();
   renderProfiles();
+  buildKbmBindings(next.kbmPreset);
+  syncKbmSliders.forEach((f) => f());
+  renderKbmStatus();
 }
 
 async function init() {
   buildMapping();
   buildTuning();
   buildTest();
+  buildKbm();
   applyState(await api.getState());
   showTab(state.startTab);
 
   api.on('state', applyState);
-  api.on('status', (status) => { state.status = status; renderStatus(); });
+  api.on('status', (status) => { state.status = status; renderStatus(); renderKbmStatus(); });
   api.on('press', onPress);
+  api.on('kbm', (k) => { state.kbm = k; renderKbmStatus(); });
   api.on('frame', (frame) => {
     if (currentTab === 'mapping') frameMapping(frame);
     else if (currentTab === 'tuning') frameTuning(frame);
     else if (currentTab === 'test') frameTest(frame);
+    else if (currentTab === 'kbm') frameKbm(frame);
   });
 }
 init();

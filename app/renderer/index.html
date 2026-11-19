@@ -13,6 +13,7 @@
     <button role="tab" data-tab="mapping" aria-selected="true">Mapping</button>
     <button role="tab" data-tab="tuning" aria-selected="false">Tuning</button>
     <button role="tab" data-tab="test" aria-selected="false">Test</button>
+    <button role="tab" data-tab="kbm" aria-selected="false">Keyboard &amp; mouse</button>
     <button role="tab" data-tab="profiles" aria-selected="false">Profiles</button>
   </div>
   <p class="rail-note" id="rail-profile"></p>
@@ -102,6 +103,41 @@
           <h2 class="log-head">Recent presses</h2>
           <ol class="log" id="log" aria-live="off"></ol>
         </div>
+      </div>
+    </section>
+
+    <section id="view-kbm" role="tabpanel" aria-label="Keyboard and mouse" hidden>
+      <div class="page-head with-actions">
+        <div>
+          <h1>Keyboard &amp; mouse</h1>
+          <p>Play with GTA V's PC keys. Each key sends the PlayStation input that does the same thing on the PS5, and the mouse moves the camera.</p>
+        </div>
+        <button class="switch" id="kbm-switch" role="switch" aria-checked="false"><span class="switch-label">Off</span><span class="track"><span class="thumb"></span></span></button>
+      </div>
+
+      <div class="kbm-status" id="kbm-status">
+        <div class="kbm-state"><i class="dot"></i><div><b id="kbm-title"></b><p id="kbm-text"></p></div></div>
+        <div class="layer-pick" role="radiogroup" aria-label="Controls in use" id="kbm-layers"></div>
+      </div>
+
+      <div class="tune">
+        <div class="tune-text">
+          <h2>Mouse look</h2>
+          <p>Mouse movement becomes right-stick movement. Raise the smallest movement if slow, careful aiming does nothing in the game.</p>
+          <label class="slider-label" for="k-sens">Sensitivity</label>
+          <div class="slider"><input type="range" id="k-sens" min="0.2" max="4" step="0.1"><output id="k-sens-out"></output></div>
+          <label class="slider-label" for="k-dz">Smallest stick movement</label>
+          <div class="slider"><input type="range" id="k-dz" min="0" max="40" step="1"><output id="k-dz-out"></output></div>
+          <label class="slider-label" for="k-smooth">Smoothing</label>
+          <div class="slider"><input type="range" id="k-smooth" min="6" max="40" step="1"><output id="k-smooth-out"></output></div>
+        </div>
+        <div class="tune-fig"><figure><svg id="kbm-plot" viewBox="-60 -60 120 120"></svg><figcaption>Right stick from the mouse</figcaption></figure></div>
+      </div>
+
+      <div class="blocks kbm-blocks" id="kbm-blocks"></div>
+      <div class="block kbm-notes">
+        <h2>Not mapped</h2>
+        <ul id="kbm-missing"></ul>
       </div>
     </section>
 

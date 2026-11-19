@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const { DEFAULT_PROFILE, validateProfile } = require('./mapping');
+const { DEFAULT_KBM_SETTINGS } = require('./kbm/mapper');
 
 // Fill any missing section from the defaults, so old or hand-written files keep working.
 function mergeProfile(user) {
@@ -14,6 +15,7 @@ function mergeProfile(user) {
   if (user && user.buttons) merged.buttons = { ...user.buttons };
   if (user && user.view && user.view.chords) merged.view.chords = { ...user.view.chords };
   if (user && typeof user.name === 'string' && user.name.trim()) merged.name = user.name.trim();
+  merged.kbm = { ...DEFAULT_KBM_SETTINGS, ...((user && user.kbm) || {}) };
   return validateProfile(merged);
 }
 

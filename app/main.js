@@ -4,6 +4,7 @@
 // Development flags:
 //   --no-bridge            open the window without creating the virtual controller
 //   --keep-server          leave the VIIPER server running when PadBridge quits
+//   --kbm-test             keyboard/mouse capture reacts to injected input and ignores which window is in front (tests only)
 //   --user-data=<dir>      keep profiles and settings somewhere else (for tests)
 //   --tab=<name>           open on mapping | tuning | test | profiles
 //   --screenshot=<file>    save a PNG of the window once it has rendered, then quit
@@ -16,6 +17,10 @@ const { execFile, execFileSync, spawn } = require('child_process');
 const { Engine } = require('../src/engine');
 const { ProfileStore, mergeProfile } = require('../src/profiles');
 const xinput = require('../src/xinput');
+const { KbmMapper } = require('../src/kbm/mapper');
+const { GTAV } = require('../src/kbm/gtav');
+const { InputCapture } = require('../src/kbm/capture');
+const { label: keyLabel } = require('../src/kbm/keys');
 
 const arg = (name) => {
   const hit = process.argv.find((a) => a.startsWith(`--${name}=`));
@@ -35,6 +40,8 @@ let store = null;
 let engine = null;
 let quitting = false;
 let remotePlay = false;
+let kbm = null;      // keyboard and mouse mapper (GTA V preset)
+let capture = null;  // Windows keyboard and mouse hooks
 
 // ---- tray icon: a round button cap, drawn in code so there is no asset to ship ----
 function capIcon(rgb) {
@@ -102,14 +109,63 @@ function snapshot() {
     active,
     profile: store.load(active),
     guideSupported: xinput.guideSupported(),
+    kbm: kbmStatus(),
+    kbmPreset: presetForWindow(),
     startTab: arg('tab') || 'mapping',
   };
 }
 const send = (channel, payload) => { if (win && !win.isDestroyed()) win.webContents.send(channel, payload); };
 const pushState = () => { send('state', snapshot()); refreshTray(); };
 
+// ---- keyboard and mouse ------------------------------------------------------------------------
+function kbmStatus() {
+  return { ...capture.state, layer: kbm.layer, layers: Object.fromEntries(Object.entries(GTAV.layers).map(([id, l]) => [id, l.name])) };
+}
+const sendKbm = () => send('kbm', kbmStatus());
+
+// The preset as the window shows it: key labels resolved, nothing executable.
+function presetForWindow() {
+  const row = (b) => ({
+    key: b.key, keyLabel: keyLabel(b.key), action: b.action, press: b.press || [], stick: b.stick || null,
+    tapMs: b.tapMs || 0, minHoldMs: b.minHoldMs || 0, turbo: !!b.turbo, switchTo: b.switchTo || null,
+    whenHeld: b.whenHeld ? { keyLabel: keyLabel(b.whenHeld.key), action: b.whenHeld.action, press: b.whenHeld.press } : null,
+  });
+  return {
+    name: GTAV.name,
+    layerKey: keyLabel(GTAV.layerKey),
+    layers: Object.fromEntries(Object.entries(GTAV.layers).map(([id, l]) => [id, { name: l.name, rows: l.bindings.map(row) }])),
+    notMapped: GTAV.notMapped,
+  };
+}
+
+function applyKbm(profile) {
+  kbm.setSettings(profile.kbm);
+  capture.arm(!!profile.kbm.enabled && !SCREENSHOT);
+  sendKbm();
+}
+
+function startKbm(profile) {
+  kbm = new KbmMapper(GTAV, profile.kbm);
+  const testing = has('kbm-test');
+  capture = new InputCapture({ handles: (key) => kbm.handles(key), acceptInjected: testing, ignoreForeground: testing });
+  capture.on('key', (name, down, t) => {
+    const before = kbm.layer;
+    if (down) kbm.keyDown(name, t); else kbm.keyUp(name, t);
+    if (kbm.layer !== before) sendKbm();
+  });
+  capture.on('button', (name, down, t) => { if (down) kbm.keyDown(name, t); else kbm.keyUp(name, t); });
+  capture.on('wheel', (dir, t) => kbm.wheel(dir, t));
+  capture.on('move', (dx, dy, t) => kbm.mouse(dx, dy, t));
+  capture.on('release', () => { kbm.reset(kbm.layer); }); // let go of everything, keep the layer
+  capture.on('state', sendKbm);
+  capture.on('error', (err) => console.error('[kbm]', err.message));
+  engine.setOverlay((now) => (capture.locked ? kbm.update(now) : null));
+  applyKbm(profile);
+}
+
 function selectProfile(name) {
   engine.setProfile(store.load(name));
+  applyKbm(store.load(name));
   store.setActive(name);
   pushState();
 }
@@ -160,12 +216,14 @@ function wire() {
   ipcMain.handle('bridge:start', () => { engine.start(); });
   ipcMain.handle('bridge:stop', () => engine.stop());
   ipcMain.handle('rumble:test', () => engine.testRumble());
+  ipcMain.handle('kbm:layer', (_e, layer) => { kbm.setLayer(layer); sendKbm(); });
 
   // Save edits to the active profile and apply them at once.
   ipcMain.handle('profile:save', (_e, profile) => {
     const clean = mergeProfile({ ...profile, name: store.activeName() });
     engine.setProfile(clean);
     store.save(clean);
+    applyKbm(clean);
     return clean;
   });
   ipcMain.handle('profile:select', (_e, name) => { selectProfile(name); });
@@ -232,8 +290,11 @@ app.whenReady().then(() => {
   store = new ProfileStore(path.join(app.getPath('userData'), 'profiles'));
   engine = new Engine({ profile: store.load(store.activeName()) });
   engine.on('status', (status) => { send('status', { ...status, remotePlay }); refreshTray(); });
-  engine.on('frame', (frame) => { if (win && win.isVisible()) send('frame', frame); });
+  engine.on('frame', (frame) => {
+    if (win && win.isVisible()) send('frame', { ...frame, kbmHeld: capture && capture.locked ? [...kbm.held] : [] });
+  });
   engine.on('press', (text) => send('press', text));
+  startKbm(store.load(store.activeName()));
   engine.open();
   if (!NO_BRIDGE) ensureServer().finally(() => engine.start());
 
@@ -255,5 +316,6 @@ app.on('before-quit', (e) => {
   e.preventDefault(); // remove the virtual controller cleanly before leaving
   engine.closed = true;
   quitting = true;
+  if (capture) capture.close(); // give the keyboard and mouse back first
   engine.close().finally(() => { stopServer(); app.quit(); });
 });

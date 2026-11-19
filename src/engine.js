@@ -6,12 +6,16 @@
 //   'frame'  ({input, output})   live state for a UI, about 30 times a second
 //   'press'  (text)              the pressed PlayStation buttons changed
 //   'log'    (text)              human-readable progress
+//
+// setOverlay(fn): fn(now) returns a keyboard-and-mouse frame (see kbm/mapper.js)
+// that is merged into every report, or null.
 
 const { EventEmitter } = require('events');
 const { ViiperClient } = require('viiperclient');
 const { DualsenseInput } = require('viiperclient/devices/Dualsense');
 const xinput = require('./xinput');
 const { Mapper, DEFAULT_PROFILE, BUTTON, DPAD, neutralInput, decodeOutput } = require('./mapping');
+const { mergeIntoReport } = require('./kbm/mapper');
 
 const TICK_MS = 2;
 const KEEPALIVE_MS = 8;
@@ -109,6 +113,8 @@ class Engine extends EventEmitter {
     if (this.slot !== null) xinput.rumble(this.slot, 0, 0);
     restoreTimerResolution();
   }
+
+  setOverlay(fn) { this.overlay = fn || null; }
 
   setProfile(profile) {
     this.mapper = new Mapper(profile); // throws on an invalid profile, leaving the old one active
@@ -245,7 +251,10 @@ class Engine extends EventEmitter {
   tick() {
     const now = performance.now();
     const input = this.readInput();
-    const state = this.mapper.update(input, now);
+    let state = this.mapper.update(input, now);
+    // Another input source (keyboard and mouse) can add to what the controller sends.
+    const extra = this.overlay ? this.overlay(now) : null;
+    if (extra) state = mergeIntoReport(state, extra);
 
     if (this.device) {
       const key = `${state.Buttons},${state.Dpad},${state.Sticklx},${state.Stickly},${state.Stickrx},${state.Stickry},${state.Triggerl2},${state.Triggerr2},${state.Touch1active},${state.Touch1x},${state.Touch1y}`;
@@ -266,7 +275,7 @@ class Engine extends EventEmitter {
 
     if (now - this.lastFrame >= FRAME_MS && this.listenerCount('frame') > 0) {
       this.lastFrame = now;
-      this.emit('frame', { input, output: state });
+      this.emit('frame', { input, output: state, extra });
     }
   }
 

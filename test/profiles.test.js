@@ -12,7 +12,9 @@ test('P1 a new store seeds the default profile and makes it active', () => {
   const store = tempStore();
   assert.deepEqual(store.list(), ['Default']);
   assert.equal(store.activeName(), 'Default');
-  assert.deepEqual(store.load('Default'), DEFAULT_PROFILE);
+  const { kbm, ...rest } = store.load('Default');
+  assert.deepEqual(rest, DEFAULT_PROFILE);
+  assert.equal(kbm.enabled, false, 'keyboard and mouse start switched off');
 });
 
 test('P2 save then load round-trips a changed profile', () => {
@@ -76,4 +78,16 @@ test('P9 a partial profile is filled in from the defaults', () => {
   assert.equal(p.sticks.deadzone, 0.2);
   assert.equal(p.view.holdMs, DEFAULT_PROFILE.view.holdMs);
   assert.deepEqual(p.buttons, DEFAULT_PROFILE.buttons);
+});
+
+test('P10 keyboard and mouse settings save with the profile', () => {
+  const store = tempStore();
+  const p = store.load('Default');
+  p.kbm.enabled = true;
+  p.kbm.sensitivity = 2.5;
+  store.save(p);
+  const back = store.load('Default');
+  assert.equal(back.kbm.enabled, true);
+  assert.equal(back.kbm.sensitivity, 2.5);
+  assert.equal(back.kbm.antiDeadzone, 0.18, 'untouched settings keep their defaults');
 });
