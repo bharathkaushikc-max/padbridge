@@ -1,0 +1,53 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0}
+body{width:1440px;height:900px;overflow:hidden;background:#fbfbf8;color:#16171a;font:500 15px/1.4 "Hanken Grotesk",sans-serif;display:flex}
+nav{width:200px;border-right:2px solid #16171a;padding:30px 0}
+.logo{font:800 26px/1 "Hanken Grotesk";padding:0 26px 28px;letter-spacing:-.02em}
+nav a{display:block;padding:12px 26px;font-weight:700;font-size:17px;color:#16171a}
+nav a.on{background:#086fab;color:#fff}
+main{flex:1;display:flex;flex-direction:column}
+.status{height:60px;border-bottom:2px solid #16171a;display:flex;align-items:center;padding:0 34px;gap:34px;font-weight:700}
+.status span::before{content:"";display:inline-block;width:11px;height:11px;border-radius:50%;background:#086fab;margin-right:9px}
+.status .bad::before{background:#e2452f}
+.status button{margin-left:auto;background:#16171a;color:#fff;border:0;font:700 15px "Hanken Grotesk";padding:11px 22px;border-radius:999px}
+.page{flex:1;position:relative;padding:28px 34px}
+h1{font:800 46px/1 "Hanken Grotesk";letter-spacing:-.03em}
+.sub{color:#5c5f66;margin-top:6px}
+svg{position:absolute;left:0;top:120px;width:1240px;height:640px}
+.lab{position:absolute;width:250px;display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid #16171a;padding-bottom:5px}
+.lab b{font:800 22px/1 "Hanken Grotesk";letter-spacing:-.01em}
+.lab i{font-style:normal;font-weight:700;color:#086fab}
+.l{left:34px}.rr{right:34px}
+.foot{position:absolute;left:34px;right:34px;bottom:26px;display:flex;gap:26px;border-top:2px solid #16171a;padding-top:14px;font-weight:700}
+.foot em{font-style:normal;color:#e2452f;font-weight:800;margin-right:8px}
+</style></head><body>
+<nav><div class="logo">PadBridge</div><a class="on">Mapping</a><a>Tuning</a><a>Test</a><a>Profiles</a></nav>
+<main><div class="status"><span>Xbox controller</span><span>Virtual DualSense</span><span class="bad">Remote Play not running</span><button>Bridge on</button></div>
+<div class="page"><h1>Controls</h1><p class="sub">Profile: Default. Click a label, then press the Xbox button you want for it.</p>
+<svg viewBox="0 0 1240 640" fill="none" stroke="#16171a" stroke-width="3">
+<path d="M420 190c40-34 110-44 200-44s160 10 200 44c44 38 84 190 80 290-3 70-58 90-96 46l-56-74H492l-56 74c-38 44-93 24-96-46-4-100 36-252 80-290z" fill="#fff"/>
+<circle cx="500" cy="270" r="40"/><circle cx="500" cy="270" r="18" fill="#16171a"/>
+<circle cx="690" cy="380" r="40"/><circle cx="690" cy="380" r="18" fill="#16171a"/>
+<path d="M532 350h30v30h30v30h-30v30h-30v-30h-30v-30h30z"/>
+<circle cx="770" cy="230" r="19" fill="#086fab"/><circle cx="810" cy="270" r="19"/><circle cx="730" cy="270" r="19"/><circle cx="770" cy="310" r="19"/>
+<rect x="585" y="258" width="22" height="14" rx="7"/><rect x="633" y="258" width="22" height="14" rx="7"/>
+<path d="M440 172l40-40h70M800 172l-40-40h-70" />
+<g stroke="#086fab" stroke-width="2">
+<path d="M284 80h170v66M284 158h150v20M284 236h176M284 314h180v40M284 392h220v10"/>
+<path d="M956 80H790v66M956 158H810v20M956 236H790M956 314H832v-44M956 392H790v-82M956 470H690v-50"/></g>
+</svg>
+<div class="lab l" style="top:176px"><b>L2</b><i>LT</i></div>
+<div class="lab l" style="top:254px"><b>L1</b><i>LB</i></div>
+<div class="lab l" style="top:332px"><b>Left stick / L3</b><i>Left stick</i></div>
+<div class="lab l" style="top:410px"><b>D-pad</b><i>D-pad</i></div>
+<div class="lab l" style="top:488px"><b>Create</b><i>View tap</i></div>
+<div class="lab rr" style="top:176px"><b>R2</b><i>RT</i></div>
+<div class="lab rr" style="top:254px"><b>R1</b><i>RB</i></div>
+<div class="lab rr" style="top:332px"><b>Triangle</b><i>Y</i></div>
+<div class="lab rr" style="top:410px"><b>Circle</b><i>B</i></div>
+<div class="lab rr" style="top:488px"><b>Cross</b><i>A</i></div>
+<div class="lab rr" style="top:566px"><b>Right stick / R3</b><i>Right stick</i></div>
+<div class="foot"><span><em>View +</em>Menu = PS button</span><span><em>View +</em>RB = Touchpad click</span><span><em>View held</em>Touchpad click</span><span><em>View +</em>Right stick = Swipe</span></div>
+</div></main></body></html>

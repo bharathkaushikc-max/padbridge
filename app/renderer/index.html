@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:">
+<title>PadBridge</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav class="rail" aria-label="Sections">
+  <div class="wordmark">PadBridge</div>
+  <div class="tabs" role="tablist" aria-orientation="vertical">
+    <button role="tab" data-tab="mapping" aria-selected="true">Mapping</button>
+    <button role="tab" data-tab="tuning" aria-selected="false">Tuning</button>
+    <button role="tab" data-tab="test" aria-selected="false">Test</button>
+    <button role="tab" data-tab="profiles" aria-selected="false">Profiles</button>
+  </div>
+  <p class="rail-note" id="rail-profile"></p>
+</nav>
+
+<div class="work">
+  <header class="status" aria-label="Connection status">
+    <div class="link" id="st-xbox"><i class="dot"></i><b>Xbox controller</b><span></span></div>
+    <div class="link" id="st-bridge"><i class="dot"></i><b>Bridge</b><span></span></div>
+    <div class="link" id="st-rp"><i class="dot"></i><b>Remote Play</b><span></span></div>
+    <button class="switch" id="bridge-switch" role="switch" aria-checked="false"><span class="switch-label">Bridge off</span><span class="track"><span class="thumb"></span></span></button>
+  </header>
+
+  <main>
+    <section id="view-mapping" role="tabpanel" aria-label="Mapping">
+      <div class="page-head">
+        <h1>Controls</h1>
+        <p>Press a button on your Xbox controller to find it here, then choose what it sends to the PS5.</p>
+      </div>
+      <div class="diagram" id="diagram"></div>
+      <p class="notice" id="unreachable" hidden></p>
+      <div class="blocks">
+        <div class="block">
+          <h2>View button</h2>
+          <p>The Xbox controller has fewer buttons, so View works as a modifier.</p>
+          <div class="rows" id="view-rows"></div>
+        </div>
+        <div class="block">
+          <h2>D-pad</h2>
+          <p>Each direction can be sent somewhere else.</p>
+          <div class="rows" id="dpad-rows"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-tuning" role="tabpanel" aria-label="Tuning" hidden>
+      <div class="page-head">
+        <h1>Tuning</h1>
+        <p>Move the sticks and triggers while you adjust. The figures show your controller live.</p>
+      </div>
+      <div class="tune">
+        <div class="tune-text">
+          <h2>Stick deadzone</h2>
+          <p>How far a stick must move before the PS5 sees it. Raise it if your character drifts with the sticks at rest.</p>
+          <div class="slider"><input type="range" id="t-deadzone" min="0" max="30" step="1" aria-label="Stick deadzone"><output id="t-deadzone-out"></output></div>
+        </div>
+        <div class="tune-fig sticks"><figure><svg id="plot-l" viewBox="-60 -60 120 120"></svg><figcaption>Left stick</figcaption></figure><figure><svg id="plot-r" viewBox="-60 -60 120 120"></svg><figcaption>Right stick</figcaption></figure></div>
+      </div>
+      <div class="tune">
+        <div class="tune-text">
+          <h2>Trigger press point</h2>
+          <p>How far LT and RT must be pulled before they count as a pressed L2 or R2. The analog amount is always sent as well.</p>
+          <div class="slider"><input type="range" id="t-trigger" min="2" max="60" step="1" aria-label="Trigger press point"><output id="t-trigger-out"></output></div>
+        </div>
+        <div class="tune-fig bars"><div class="bar" id="bar-l"><span>LT</span><div class="trough"><i class="fill"></i><i class="mark"></i></div></div><div class="bar" id="bar-r"><span>RT</span><div class="trough"><i class="fill"></i><i class="mark"></i></div></div></div>
+      </div>
+      <div class="tune">
+        <div class="tune-text">
+          <h2>View hold time</h2>
+          <p>A press shorter than this is a tap. Holding past it is a hold. Try it: press and hold View.</p>
+          <div class="slider"><input type="range" id="t-hold" min="150" max="800" step="10" aria-label="View hold time"><output id="t-hold-out"></output></div>
+        </div>
+        <div class="tune-fig"><div class="hold" id="hold-fig"><div class="trough"><i class="fill"></i><i class="mark"></i></div><p id="hold-text">Waiting for View</p></div></div>
+      </div>
+    </section>
+
+    <section id="view-test" role="tabpanel" aria-label="Test" hidden>
+      <div class="page-head">
+        <h1>Test</h1>
+        <p>What you press on the left, what Remote Play receives on the right.</p>
+      </div>
+      <div class="test-grid">
+        <div class="test-col">
+          <h2>Xbox controller</h2>
+          <div class="pad-only" id="test-pad"></div>
+          <div class="rumble"><button class="btn" id="rumble-btn">Test vibration</button><span id="rumble-note"></span></div>
+        </div>
+        <div class="test-col">
+          <h2>Virtual DualSense</h2>
+          <div class="caps" id="out-caps"></div>
+          <div class="out-figs">
+            <figure><svg id="out-l" viewBox="-60 -60 120 120"></svg><figcaption>Left stick</figcaption></figure>
+            <figure><svg id="out-r" viewBox="-60 -60 120 120"></svg><figcaption>Right stick</figcaption></figure>
+            <figure class="touch"><div class="touchpad" id="out-touch"><i></i></div><figcaption>Touchpad</figcaption></figure>
+          </div>
+          <div class="tune-fig bars out-bars"><div class="bar" id="out-l2"><span>L2</span><div class="trough"><i class="fill"></i></div></div><div class="bar" id="out-r2"><span>R2</span><div class="trough"><i class="fill"></i></div></div></div>
+          <h2 class="log-head">Recent presses</h2>
+          <ol class="log" id="log" aria-live="off"></ol>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-profiles" role="tabpanel" aria-label="Profiles" hidden>
+      <div class="page-head with-actions">
+        <div>
+          <h1>Profiles</h1>
+          <p>A profile holds one complete mapping and its tuning. The one in use applies at once.</p>
+        </div>
+        <div class="actions"><button class="btn" id="p-import">Import</button><button class="btn primary" id="p-new">New profile</button></div>
+      </div>
+      <p class="notice" id="p-error" hidden></p>
+      <ul class="profiles" id="profile-list"></ul>
+    </section>
+  </main>
+</div>
+<script src="pad.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

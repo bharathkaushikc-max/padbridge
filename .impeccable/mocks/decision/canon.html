@@ -1,0 +1,43 @@
+<!doctype html><html><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0}
+body{width:1440px;height:900px;overflow:hidden;background:#1e1f22;color:#e6e7ea;font:400 15px/1.4 "Segoe UI",system-ui,sans-serif}
+header{height:56px;background:#2b2d31;display:flex;align-items:center;padding:0 24px;gap:28px;border-bottom:1px solid #3a3c42}
+.logo{font-weight:600;font-size:17px}
+.tabs{display:flex;gap:4px;height:100%}
+.tabs a{display:flex;align-items:center;padding:0 18px;color:#a9acb4;font-size:15px}
+.tabs a.on{color:#fff;border-bottom:2px solid #4c8dff}
+header button{margin-left:auto;background:#2a66d9;color:#fff;border:0;border-radius:6px;padding:9px 18px;font:600 14px "Segoe UI"}
+.status{display:flex;gap:28px;padding:14px 24px;background:#232428;border-bottom:1px solid #3a3c42;font-size:14px;color:#a9acb4}
+.status b{color:#e6e7ea;font-weight:600}
+.status i{display:inline-block;width:8px;height:8px;border-radius:50%;background:#3fb96b;margin-right:8px}
+.status i.bad{background:#e5534b}
+main{padding:28px 24px}
+h1{font-size:22px;font-weight:600;margin-bottom:4px}
+.sub{color:#a9acb4;margin-bottom:20px}
+table{width:100%;border-collapse:collapse;background:#2b2d31;border-radius:8px;overflow:hidden}
+th{text-align:left;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#a9acb4;padding:12px 18px;border-bottom:1px solid #3a3c42}
+td{padding:11px 18px;border-bottom:1px solid #34363c;font-size:15px}
+.sel{display:inline-flex;justify-content:space-between;width:220px;background:#1e1f22;border:1px solid #45474e;border-radius:6px;padding:7px 12px}
+.sel::after{content:"▾";color:#a9acb4}
+td:last-child{color:#a9acb4;font-size:14px}
+</style></head><body>
+<header><div class="logo">PadBridge</div><div class="tabs"><a class="on">Mapping</a><a>Tuning</a><a>Test</a><a>Profiles</a></div><button>Stop bridge</button></header>
+<div class="status"><span><i></i><b>Xbox controller</b> connected, slot 1</span><span><i></i><b>Virtual DualSense</b> ready</span><span><i></i><b>VIIPER</b> 0.9.0</span><span><i class="bad"></i><b>Remote Play</b> not running</span></div>
+<main><h1>Mapping</h1><p class="sub">Profile: Default</p>
+<table><tr><th>PlayStation button</th><th>Xbox input</th><th>Notes</th></tr>
+<tr><td>Cross</td><td><span class="sel">A</span></td><td>Confirm</td></tr>
+<tr><td>Circle</td><td><span class="sel">B</span></td><td>Back</td></tr>
+<tr><td>Square</td><td><span class="sel">X</span></td><td></td></tr>
+<tr><td>Triangle</td><td><span class="sel">Y</span></td><td></td></tr>
+<tr><td>L1</td><td><span class="sel">LB</span></td><td></td></tr>
+<tr><td>R1</td><td><span class="sel">RB</span></td><td></td></tr>
+<tr><td>L2</td><td><span class="sel">LT</span></td><td>Analog, fixed</td></tr>
+<tr><td>R2</td><td><span class="sel">RT</span></td><td>Analog, fixed</td></tr>
+<tr><td>L3</td><td><span class="sel">Left stick click</span></td><td></td></tr>
+<tr><td>R3</td><td><span class="sel">Right stick click</span></td><td></td></tr>
+<tr><td>Options</td><td><span class="sel">Menu</span></td><td></td></tr>
+<tr><td>Create</td><td><span class="sel">View (tap)</span></td><td>View is a modifier</td></tr>
+<tr><td>PS button</td><td><span class="sel">View + Menu</span></td><td>Xbox button also works</td></tr>
+<tr><td>Touchpad click</td><td><span class="sel">View (hold)</span></td><td>Or View + RB</td></tr>
+</table></main></body></html>

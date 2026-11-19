@@ -1,0 +1,41 @@
+{
+  "name": "padbridge",
+  "version": "1.0.0",
+  "description": "Xbox controller to virtual DualSense bridge for PS Remote Play",
+  "main": "app/main.js",
+  "scripts": {
+    "test": "node --test",
+    "start": "node src/bridge.js",
+    "e2e": "node e2e/run.js",
+    "app": "electron ."
+  },
+  "keywords": [
+    "ps-remote-play",
+    "dualsense",
+    "xbox-controller",
+    "controller-remapping",
+    "viiper",
+    "electron",
+    "windows"
+  ],
+  "author": "bharathkaushikc-max",
+  "license": "MIT",
+  "dependencies": {
+    "koffi": "^3.3.8",
+    "node-hid": "^3.4.0",
+    "viiperclient": "^0.9.0"
+  },
+  "devDependencies": {
+    "@fontsource-variable/hanken-grotesk": "^5.3.0",
+    "electron": "^45.3.2"
+  },
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bharathkaushikc-max/padbridge.git"
+  },
+  "homepage": "https://github.com/bharathkaushikc-max/padbridge#readme"
+}

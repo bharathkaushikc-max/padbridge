@@ -1,0 +1,10 @@
+node_modules/
+*.log
+
+# Design-tool working files: logs, caches with local paths, and scratch payloads.
+.impeccable/hook.cache.json
+.impeccable/questions/
+.impeccable/decision-payload.json
+.impeccable/brief-body.md
+.impeccable/review/
+.impeccable/build/

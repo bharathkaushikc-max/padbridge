@@ -1,0 +1,66 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0}
+body{width:1440px;height:900px;overflow:hidden;background:#14161f;color:#f4f1e8;font:500 15px/1.4 Barlow,sans-serif}
+.cond{font-family:"Barlow Condensed",sans-serif;text-transform:uppercase;letter-spacing:.04em}
+header{height:92px;background:#f7c93b;color:#14161f;display:flex;align-items:center;padding:0 36px;gap:40px}
+.logo{font:800 44px/1 "Barlow Condensed";letter-spacing:.02em}
+.chain{display:flex;gap:0;flex:1;align-items:center}
+.link{display:flex;align-items:center;gap:10px;font:700 19px/1 "Barlow Condensed";text-transform:uppercase;letter-spacing:.05em}
+.lamp{width:18px;height:18px;border-radius:50%;background:#2fa866;border:3px solid #14161f}
+.lamp.off{background:#e23b2e}
+.sep{width:44px;height:3px;background:#14161f;margin:0 14px}
+.run{background:#14161f;color:#f7c93b;font:800 22px/1 "Barlow Condensed";letter-spacing:.08em;padding:16px 26px;border-radius:6px}
+.wrap{display:flex;height:808px}
+nav{width:216px;padding:28px 0;border-right:2px solid #2a2d3a}
+nav div{display:flex;gap:14px;align-items:center;padding:14px 28px;font:700 22px/1 "Barlow Condensed";text-transform:uppercase;letter-spacing:.06em;color:#9a9db0}
+nav div b{width:30px;height:30px;border:2px solid currentColor;border-radius:50%;display:grid;place-items:center;font-size:17px}
+nav .on{background:#f7c93b;color:#14161f}
+main{flex:1;padding:30px 40px}
+h1{font:800 40px/1 "Barlow Condensed";text-transform:uppercase;letter-spacing:.03em}
+.sub{color:#9a9db0;margin:6px 0 24px}
+.strip{display:grid;grid-template-columns:repeat(6,1fr);gap:18px 14px;background:#1c1f2b;border:2px solid #2a2d3a;border-radius:10px;padding:26px 22px}
+.cell{text-align:center}
+.cap{width:86px;height:86px;border-radius:50%;margin:0 auto 10px;display:grid;place-items:center;font:800 30px/1 "Barlow Condensed";color:#14161f;background:#f4f1e8;border:5px solid #14161f;outline:2px solid #f4f1e8}
+.r{background:#e23b2e;color:#fff}.b{background:#2f6fe4;color:#fff}.g{background:#2fa866;color:#fff}.y{background:#f7c93b}
+.name{font:700 18px/1 "Barlow Condensed";text-transform:uppercase;letter-spacing:.06em}
+.press{margin-top:6px;font-size:13px;color:#9a9db0}
+.press i{font-style:normal;display:inline-block;background:#f4f1e8;color:#14161f;font:700 14px/1 "Barlow Condensed";padding:4px 8px;border-radius:4px;margin-left:4px}
+.view{margin-top:22px;display:flex;gap:12px;align-items:stretch}
+.view h2{font:800 22px/1.05 "Barlow Condensed";text-transform:uppercase;width:120px;color:#f7c93b}
+.step{flex:1;border:2px solid #2a2d3a;border-radius:8px;padding:12px 14px}
+.step b{display:block;font:700 17px/1 "Barlow Condensed";text-transform:uppercase;letter-spacing:.05em;color:#9a9db0;margin-bottom:6px}
+.step span{font:800 24px/1 "Barlow Condensed";text-transform:uppercase}
+</style></head><body>
+<header><div class="logo">PADBRIDGE</div>
+<div class="chain">
+<div class="link"><span class="lamp"></span>Xbox controller</div><span class="sep"></span>
+<div class="link"><span class="lamp"></span>Bridge</div><span class="sep"></span>
+<div class="link"><span class="lamp"></span>Virtual DualSense</div><span class="sep"></span>
+<div class="link"><span class="lamp off"></span>Remote Play</div></div>
+<div class="run">RUNNING</div></header>
+<div class="wrap"><nav>
+<div class="on"><b>1</b>Mapping</div><div><b>2</b>Tuning</div><div><b>3</b>Test</div><div><b>4</b>Profiles</div></nav>
+<main><h1>Mapping</h1><p class="sub">Profile: Default. Click a button, then press the Xbox button that should trigger it.</p>
+<div class="strip">
+<div class="cell"><div class="cap b">✕</div><div class="name">Cross</div><div class="press">Press <i>A</i></div></div>
+<div class="cell"><div class="cap r">○</div><div class="name">Circle</div><div class="press">Press <i>B</i></div></div>
+<div class="cell"><div class="cap y">□</div><div class="name">Square</div><div class="press">Press <i>X</i></div></div>
+<div class="cell"><div class="cap g">△</div><div class="name">Triangle</div><div class="press">Press <i>Y</i></div></div>
+<div class="cell"><div class="cap">L1</div><div class="name">L1</div><div class="press">Press <i>LB</i></div></div>
+<div class="cell"><div class="cap">R1</div><div class="name">R1</div><div class="press">Press <i>RB</i></div></div>
+<div class="cell"><div class="cap">L2</div><div class="name">L2 trigger</div><div class="press">Pull <i>LT</i></div></div>
+<div class="cell"><div class="cap">R2</div><div class="name">R2 trigger</div><div class="press">Pull <i>RT</i></div></div>
+<div class="cell"><div class="cap">L3</div><div class="name">L3</div><div class="press">Click <i>Left stick</i></div></div>
+<div class="cell"><div class="cap">R3</div><div class="name">R3</div><div class="press">Click <i>Right stick</i></div></div>
+<div class="cell"><div class="cap">≡</div><div class="name">Options</div><div class="press">Press <i>Menu</i></div></div>
+<div class="cell"><div class="cap">PS</div><div class="name">PS button</div><div class="press">Press <i>Xbox</i></div></div>
+</div>
+<div class="view"><h2>View button combos</h2>
+<div class="step"><b>Tap</b><span>Create</span></div>
+<div class="step"><b>Hold 0.3 s</b><span>Touchpad click</span></div>
+<div class="step"><b>+ Menu</b><span>PS button</span></div>
+<div class="step"><b>+ RB</b><span>Touchpad click</span></div>
+<div class="step"><b>+ Right stick</b><span>Touchpad swipe</span></div></div>
+</main></div></body></html>

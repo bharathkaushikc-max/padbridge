@@ -1,0 +1,63 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0}
+body{width:1440px;height:900px;overflow:hidden;background:#0e1b3d;color:#f5f3ea;font:600 15px/1.4 Overpass,sans-serif}
+.top{height:176px;padding:26px 40px 0;position:relative;border-bottom:2px solid #24356b}
+.logo{font:900 24px/1 Overpass;letter-spacing:.01em}
+.toggle{position:absolute;right:40px;top:22px;background:#00a651;color:#06281a;font:900 15px Overpass;padding:11px 20px;border-radius:999px}
+.line{position:absolute;left:40px;right:40px;top:92px;height:10px;background:#00a651;border-radius:5px}
+.line .broken{position:absolute;right:0;width:25%;height:10px;background:repeating-linear-gradient(90deg,#e4002b 0 14px,#0e1b3d 14px 24px)}
+.st{position:absolute;top:78px;width:38px;height:38px;border-radius:50%;background:#f5f3ea;border:8px solid #0e1b3d;outline:5px solid #f5f3ea;transform:translateX(-50%)}
+.st.x{outline-color:#e4002b}
+.nm{position:absolute;top:128px;transform:translateX(-50%);font:800 16px/1.1 Overpass;text-align:center;white-space:nowrap}
+.nm small{display:block;font:600 12px Overpass;color:#9fb0de;margin-top:4px}
+.nm.x small{color:#ff8a9d}
+.wrap{display:flex;height:724px}
+nav{width:210px;padding:26px 0;border-right:2px solid #24356b}
+nav a{display:flex;align-items:center;gap:12px;padding:13px 30px;font:800 17px Overpass;color:#9fb0de}
+nav a::before{content:"";width:14px;height:14px;border-radius:50%;border:4px solid currentColor}
+nav a.on{color:#f5f3ea}nav a.on::before{background:#ffb000;border-color:#ffb000}
+main{flex:1;padding:28px 40px}
+h1{font:900 38px/1 Overpass;letter-spacing:-.01em}
+.sub{color:#9fb0de;margin:6px 0 22px;font-weight:400}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:6px 56px}
+.row{display:grid;grid-template-columns:150px 1fr 170px;align-items:center;height:46px}
+.row .a{font:800 16px Overpass;text-align:right;padding-right:14px}
+.row .b{font:800 18px Overpass;padding-left:14px}
+.rt{height:8px;border-radius:4px;position:relative}
+.rt::before,.rt::after{content:"";position:absolute;top:-8px;width:24px;height:24px;border-radius:50%;background:#f5f3ea;border:5px solid #0e1b3d;outline:3px solid #f5f3ea}
+.rt::before{left:-6px}.rt::after{right:-6px}
+.s{background:#e4002b}.c{background:#1f6fff}.m{background:#ffb000}.g{background:#00a651}
+h2{font:800 13px Overpass;letter-spacing:.14em;text-transform:uppercase;color:#9fb0de;margin:18px 0 6px;grid-column:1/-1}
+</style></head><body>
+<div class="top"><div class="logo">PadBridge</div><div class="toggle">Bridge running</div>
+<div class="line"><div class="broken"></div></div>
+<i class="st" style="left:40px;margin-left:19px"></i><div class="nm" style="left:59px;transform:none;text-align:left">Xbox controller<small>Slot 1, connected</small></div>
+<i class="st" style="left:25%;margin-left:30px"></i><div class="nm" style="left:calc(25% + 30px)">PadBridge<small>250 reports a second</small></div>
+<i class="st" style="left:50%"></i><div class="nm" style="left:50%">Virtual DualSense<small>Edge, USB</small></div>
+<i class="st x" style="left:75%;margin-left:-30px"></i><div class="nm x" style="left:calc(75% - 30px)">Remote Play<small>Not running</small></div>
+<i class="st x" style="left:calc(100% - 59px)"></i><div class="nm x" style="left:auto;right:40px;transform:none;text-align:right">PS5<small>Waiting</small></div>
+</div>
+<div class="wrap"><nav><a class="on">Mapping</a><a>Tuning</a><a>Test</a><a>Profiles</a></nav>
+<main><h1>Mapping</h1><p class="sub">Profile: Default. Select a route, then press the Xbox button that should run it.</p>
+<div class="cols">
+<h2>Face buttons</h2>
+<div class="row"><span class="a">A</span><i class="rt s"></i><span class="b">Cross</span></div>
+<div class="row"><span class="a">B</span><i class="rt s"></i><span class="b">Circle</span></div>
+<div class="row"><span class="a">X</span><i class="rt s"></i><span class="b">Square</span></div>
+<div class="row"><span class="a">Y</span><i class="rt s"></i><span class="b">Triangle</span></div>
+<h2>Shoulders and triggers</h2>
+<div class="row"><span class="a">LB</span><i class="rt c"></i><span class="b">L1</span></div>
+<div class="row"><span class="a">RB</span><i class="rt c"></i><span class="b">R1</span></div>
+<div class="row"><span class="a">LT</span><i class="rt c"></i><span class="b">L2</span></div>
+<div class="row"><span class="a">RT</span><i class="rt c"></i><span class="b">R2</span></div>
+<h2>Sticks</h2>
+<div class="row"><span class="a">Left stick click</span><i class="rt m"></i><span class="b">L3</span></div>
+<div class="row"><span class="a">Right stick click</span><i class="rt m"></i><span class="b">R3</span></div>
+<h2>System, via the View button</h2>
+<div class="row"><span class="a">Menu</span><i class="rt g"></i><span class="b">Options</span></div>
+<div class="row"><span class="a">View tap</span><i class="rt g"></i><span class="b">Create</span></div>
+<div class="row"><span class="a">View + Menu</span><i class="rt g"></i><span class="b">PS button</span></div>
+<div class="row"><span class="a">View hold</span><i class="rt g"></i><span class="b">Touchpad click</span></div>
+</div></main></div></body></html>
